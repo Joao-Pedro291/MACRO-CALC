@@ -1,55 +1,97 @@
-import React, { useState } from 'react';
-import { View, TextInput, Button, Alert, Picker } from 'react-native';
-import axios from 'axios';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import React, { useEffect, useState } from "react";
+import { View, Text, FlatList, StyleSheet, Button } from "react-native";
+import axios from "axios";
+import { useRouter } from "expo-router";
 
+export default function UserTable() {
+  const router = useRouter();
 
-export default function UserForm() {
-  const [name, setName] = useState('');
-  const [age, setAge] = useState('');
-  const [sex, setSex] = useState('masculino');
-  const [weight, setWeight] = useState('');
-  const [height, setHeight] = useState('');
-  const [activityLevel, setActivityLevel] = useState('sedentario');
+  function vaiProCadastro() {
+    router.push("/cadastro");
+  }
 
-  const handleSaveUser = async () => {
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const fetchUsers = async () => {
     try {
-      const response = await axios.post('http://localhost:3000/api/users', {
-        name,
-        age: Number(age),
-        sex,
-        weight: Number(weight),
-        height: Number(height),
-        activityLevel,
-      });
-      alert("Usuário salvo.")
-      // toast.success("Usuário salvo.")
-    } catch (error) {
-      // toast.error("Não foi possível salvar o usuário.")
-      alert("Não foi possível salvar o usuário.")
+      const res = await axios.get("http://192.168.0.228:3000/api/users");
+      setUsers(res.data);
+    } catch (err) {
+      console.error("Erro ao buscar usuários:", err.message);
     }
   };
 
+  const renderItem = ({ item }) => (
+    <View style={styles.row}>
+      <Text style={styles.cell}>{item.name}</Text>
+      <Text style={styles.cell}>{item.age}</Text>
+      <Text style={styles.cell}>{item.sex}</Text>
+      <Text style={styles.cell}>{item.weight}kg</Text>
+      <Text style={styles.cell}>{item.height}cm</Text>
+      <Text style={styles.cell}>{item.activityLevel}</Text>
+      <Text style={styles.cell}>{item.goal}</Text> {/* Nova célula */}
+      <View style={{ flex: 1 }}>
+        <Button
+          title="Calcular"
+          onPress={() =>
+            router.push(`/resultado?userId=${item._id || item.id}`)
+          }
+        />
+      </View>
+    </View>
+  );
+
   return (
-    <View>
-      <TextInput placeholder="Nome" value={name} onChangeText={setName} />
-      <TextInput placeholder="Idade" value={age} onChangeText={setAge} keyboardType="numeric" />
-      {/* Aqui você pode usar Picker para sexo */}
-      <Picker selectedValue={sex} onValueChange={setSex}>
-        <Picker.Item label="Masculino" value="masculino" />
-        <Picker.Item label="Feminino" value="feminino" />
-      </Picker>
-      <TextInput placeholder="Peso (kg)" value={weight} onChangeText={setWeight} keyboardType="numeric" />
-      <TextInput placeholder="Altura (cm)" value={height} onChangeText={setHeight} keyboardType="numeric" />
-      <Picker selectedValue={activityLevel} onValueChange={setActivityLevel}>
-        <Picker.Item label="Sedentário" value="sedentario" />
-        <Picker.Item label="Leve" value="leve" />
-        <Picker.Item label="Moderado" value="moderado" />
-        <Picker.Item label="Intenso" value="intenso" />
-        <Picker.Item label="Extremo" value="extremo" />
-      </Picker>
-      <Button title="Salvar Usuário" onPress={()=>handleSaveUser()} />
+    <View style={{ marginTop: 20 }}>
+      <Text style={styles.header}>Usuários Cadastrados</Text>
+      <View style={styles.headerRow}>
+        <Text style={styles.headerCell}>Nome</Text>
+        <Text style={styles.headerCell}>Idade</Text>
+        <Text style={styles.headerCell}>Sexo</Text>
+        <Text style={styles.headerCell}>Peso</Text>
+        <Text style={styles.headerCell}>Altura</Text>
+        <Text style={styles.headerCell}>Atividade</Text>
+        <Text style={styles.headerCell}>Objetivo</Text> {/* Novo cabeçalho */}
+        <Text style={styles.headerCell}>Ação</Text>
+      </View>
+      <FlatList
+        data={users}
+        keyExtractor={(item) => item._id}
+        renderItem={renderItem}
+      />
+      <Button title="Cadastro" onPress={vaiProCadastro} />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  header: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  headerRow: {
+    flexDirection: "row",
+    backgroundColor: "#ddd",
+    padding: 5,
+  },
+  headerCell: {
+    flex: 1,
+    fontWeight: "bold",
+    fontSize: 12,
+  },
+  row: {
+    flexDirection: "row",
+    paddingVertical: 4,
+    borderBottomWidth: 1,
+    borderColor: "#ccc",
+  },
+  cell: {
+    flex: 1,
+    fontSize: 12,
+  },
+});
