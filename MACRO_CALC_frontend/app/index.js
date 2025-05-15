@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { View, TextInput, Button, Alert, Picker } from 'react-native';
 import axios from 'axios';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 export default function UserForm() {
   const [name, setName] = useState('');
@@ -12,7 +15,7 @@ export default function UserForm() {
 
   const handleSaveUser = async () => {
     try {
-      const response = await axios.post('http://192.168.0.228:3000/api/users', {
+      const response = await axios.post('http://localhost:3000/api/users', {
         name,
         age: Number(age),
         sex,
@@ -20,10 +23,11 @@ export default function UserForm() {
         height: Number(height),
         activityLevel,
       });
-      Alert.alert('Sucesso', 'Usuário salvo com sucesso!');
+      alert("Usuário salvo.")
+      // toast.success("Usuário salvo.")
     } catch (error) {
-      Alert.alert('Erro', 'Não foi possível salvar o usuário');
-      console.error(error);
+      // toast.error("Não foi possível salvar o usuário.")
+      alert("Não foi possível salvar o usuário.")
     }
   };
 
@@ -45,7 +49,7 @@ export default function UserForm() {
         <Picker.Item label="Intenso" value="intenso" />
         <Picker.Item label="Extremo" value="extremo" />
       </Picker>
-      <Button title="Salvar Usuário" onPress={handleSaveUser} />
+      <Button title="Salvar Usuário" onPress={()=>handleSaveUser()} />
     </View>
   );
 }

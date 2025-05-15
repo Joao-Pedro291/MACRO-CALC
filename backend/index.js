@@ -12,15 +12,6 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// Conecta MongoDB
-const MONGO_URI = 'mongodb://localhost:27017/macrocalc'; // Ajuste se precisar
-mongoose.connect(MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => console.log('MongoDB conectado!'))
-.catch(err => console.error('Erro MongoDB:', err));
-
 // Rotas
 app.use('/api/users', userRoutes);
 app.use('/api/calc', calcRoutes);

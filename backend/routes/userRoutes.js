@@ -1,45 +1,64 @@
-import express from 'express';
-import User from '../models/User.js';
-
+import express from 'express'
 const router = express.Router();
 
-// Criar usuário
-router.post('/', async (req, res) => {
-  try {
-    const user = new User(req.body);
-    await user.save();
-    res.status(201).json(user);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
+var users = [
+    {
+      first_name: 'John',
+      last_name: 'Doe',
+      email: 'johndoe@example.com',
+      id:1
+    },
+  ];
+
+router.get('/', (req, res) => {
+    res.send(users);
+})
+
+router.get('/:id', (req, res) => {
+  const { id } = req.params;
+
+  res.send(users.find(x=>x.id == id));
+})
+
+router.delete('/:id', (req, res) => {
+  const { id } = req.params;
+  
+  if(users.find( x=> x.id == id) === undefined){
+    res.send("Bad request");
+
   }
-});
-
-// Atualizar usuário
-router.put('/:id', async (req, res) => {
-  try {
-    const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    if (!user) return res.status(404).json({ error: 'Usuário não encontrado' });
-    res.json(user);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
+  else{
+      users = users.filter((user) => user.id != id);
+      res.send("User "+id+" deleted!");
   }
-});
+    
+})
 
-// Buscar usuário por id
-router.get('/:id', async (req, res) => {
-  try {
-    const user = await User.findById(req.params.id);
-    if (!user) return res.status(404).json({ error: 'Usuário não encontrado' });
-    res.json(user);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
+router.patch('/:id', (req, res) => {
+  const { id } = req.params;
+  let userToCreate = req.body;
+
+  if(users.find( x=> x.id == id) === undefined){
+    res.send("Bad request");
+
   }
-});
+  else{
+      let user = users.find((user) => user.id == id);
+      user.first_name = userToCreate.first_name;
+      user.last_name = userToCreate.last_name;
+      user.email = userToCreate.email;
 
-// Buscar todos usuários (opcional)
-router.get('/', async (req, res) => {
-  const users = await User.find();
-  res.json(users);
-});
+      res.send("User "+id+" updated!");
+  }
+    
+})
 
-export default router;
+router.post('/', (req, res) => {
+  const user = req.body;
+
+  users.push({ ...user, id: users.length + 1 });
+
+  res.send(`${user.first_name} has been added to the Database`);
+})
+
+export default router
