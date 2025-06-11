@@ -2,16 +2,15 @@ import React, { useState } from 'react';
 import { View, Text, Button, Alert } from 'react-native';
 import axios from 'axios';
 
-const API_URL = 'http://192.168.0.228:3000'; // Ajuste para o IP backendEndereço 
+const API_URL = 'http://192.168.0.228:3000'; 
 
 export default function Calculation() {
   const [resultado, setResultado] = useState(null);
 
   const calcularMacros = async () => {
     try {
-      // Exemplo: Buscar usuário cadastrado para pegar dados
       const userResponse = await axios.get(`${API_URL}/users`);
-      const user = userResponse.data[0]; // pegar o primeiro usuário cadastrado, exemplo simplificado
+      const user = userResponse.data[0]; 
 
       if (!user) {
         Alert.alert('Erro', 'Nenhum usuário cadastrado.');
@@ -24,7 +23,7 @@ export default function Calculation() {
         peso: user.peso,
         altura: user.altura,
         atividade: user.atividade,
-        objetivo: 'manutencao', // Exemplo fixo, pode ter tela para selecionar
+        objetivo: 'manutencao', 
       });
 
       setResultado(res.data);

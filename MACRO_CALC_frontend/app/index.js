@@ -33,7 +33,7 @@ export default function UserTable() {
       <Text style={styles.cell}>{item.weight}kg</Text>
       <Text style={styles.cell}>{item.height}cm</Text>
       <Text style={styles.cell}>{item.activityLevel}</Text>
-      <Text style={styles.cell}>{item.goal}</Text> {/* Nova célula */}
+      <Text style={styles.cell}>{item.goal}</Text> 
       <View style={{ flex: 1 }}>
         <Button
           title="Calcular"
@@ -55,12 +55,12 @@ export default function UserTable() {
         <Text style={styles.headerCell}>Peso</Text>
         <Text style={styles.headerCell}>Altura</Text>
         <Text style={styles.headerCell}>Atividade</Text>
-        <Text style={styles.headerCell}>Objetivo</Text> {/* Novo cabeçalho */}
+        <Text style={styles.headerCell}>Objetivo</Text> 
         <Text style={styles.headerCell}>Ação</Text>
       </View>
       <FlatList
         data={users}
-        keyExtractor={(item) => item._id}
+        keyExtractor={(item) => item.id.toString()}
         renderItem={renderItem}
       />
       <Button title="Cadastro" onPress={vaiProCadastro} />

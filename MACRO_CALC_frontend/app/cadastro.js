@@ -16,7 +16,7 @@ export default function UserForm() {
   const [weight, setWeight] = useState("");
   const [height, setHeight] = useState("");
   const [activityLevel, setActivityLevel] = useState("sedentario");
-  const [goal, setGoal] = useState("manter"); // Novo estado
+  const [goal, setGoal] = useState("manter");
 
   const handleSaveUser = async () => {
     try {
@@ -27,7 +27,7 @@ export default function UserForm() {
         weight: Number(weight),
         height: Number(height),
         activityLevel,
-        goal, // Envia o objetivo
+        goal, 
       });
       alert("Usuário salvo.");
     } catch (error) {
@@ -70,7 +70,6 @@ export default function UserForm() {
         <Picker.Item label="Intenso" value="intenso" />
         <Picker.Item label="Extremo" value="extremo" />
       </Picker>
-      {/* Picker de Objetivo */}
       <Picker selectedValue={goal} onValueChange={setGoal} style={styles.picker}>
         <Picker.Item label="Perder peso" value="perder" />
         <Picker.Item label="Manter peso" value="manter" />

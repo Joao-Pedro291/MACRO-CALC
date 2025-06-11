@@ -1,28 +1,6 @@
 import express from "express";
 const router = express.Router();
-
-var users = [
-  {
-    id: 1,
-    name: "John",
-    age: 25,
-    sex: "masculino",
-    weight: 70,
-    height: 175,
-    activityLevel: "moderado",
-    goal: "manter",
-  },
-  {
-    id: 2,
-    name: "Maria",
-    age: 30,
-    sex: "feminino",
-    weight: 60,
-    height: 165,
-    activityLevel: "leve",
-    goal: "perder",
-  },
-];
+import users from "../data/users.js"
 
 router.get("/", (req, res) => {
   res.send(users);
